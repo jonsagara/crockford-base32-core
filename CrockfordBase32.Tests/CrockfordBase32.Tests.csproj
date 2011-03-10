@@ -47,6 +47,13 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CrockfordBase32EncodingTests.cs" />
+    <Compile Include="SymbolDefinitionsTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CrockfordBase32\CrockfordBase32.csproj">
+      <Project>{D75E1C89-316E-49B8-BC94-490E0F855965}</Project>
+      <Name>CrockfordBase32</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

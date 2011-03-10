@@ -1,10 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace CrockfordBase32
 {
     public class CrockfordBase32Encoding : Encoding
     {
+        static readonly IDictionary<int, char> encodeMappings;
+        static readonly IDictionary<char, int> decodeMappings;
+        static CrockfordBase32Encoding()
+        {
+            var symbols = new SymbolDefinitions();
+            encodeMappings = symbols.EncodeMappings;
+            decodeMappings = symbols.DecodeMappings;
+        }
+
         public override int GetByteCount(char[] chars, int index, int count)
         {
             throw new NotImplementedException();
