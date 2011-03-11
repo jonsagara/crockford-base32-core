@@ -18,6 +18,9 @@ namespace CrockfordBase32
 
         public string GetString(int number)
         {
+            if (number == 0)
+                return encodeMappings[0].ToString();
+
             var characters = new List<char>();
 
             var nextBase = 1 * Base;

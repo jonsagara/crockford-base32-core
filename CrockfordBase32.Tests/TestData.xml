@@ -1,4 +1,5 @@
 <tests>
+  <test number="0" encodedString="0" checkDigit="0" />
   <test number="1" encodedString="1" checkDigit="1" />
   <test number="2" encodedString="2" checkDigit="2" />
   <test number="3" encodedString="3" checkDigit="3" />
