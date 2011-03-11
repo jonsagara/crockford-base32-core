@@ -5,6 +5,8 @@ namespace CrockfordBase32
 {
     internal class SymbolDefinitions : List<SymbolDefinition>
     {
+        readonly List<SymbolDefinition> extraCheckDigits = new List<SymbolDefinition>();
+
         public SymbolDefinitions()
         {
             AddRange(new[]
@@ -36,15 +38,24 @@ namespace CrockfordBase32
                 new SymbolDefinition { Value = 24, EncodeSymbol = 'R', DecodeSymbols = new[] { 'R', 'r' } },
                 new SymbolDefinition { Value = 25, EncodeSymbol = 'S', DecodeSymbols = new[] { 'S', 's' } },
                 new SymbolDefinition { Value = 26, EncodeSymbol = 'T', DecodeSymbols = new[] { 'T', 't' } },
-                new SymbolDefinition { Value = 27, EncodeSymbol = 'V', DecodeSymbols = new[] { 'V', 'v', 'U', 'u' } },
+                new SymbolDefinition { Value = 27, EncodeSymbol = 'V', DecodeSymbols = new[] { 'V', 'v' } },
                 new SymbolDefinition { Value = 28, EncodeSymbol = 'W', DecodeSymbols = new[] { 'W', 'w' } },
                 new SymbolDefinition { Value = 29, EncodeSymbol = 'X', DecodeSymbols = new[] { 'X', 'x' } },
                 new SymbolDefinition { Value = 30, EncodeSymbol = 'Y', DecodeSymbols = new[] { 'Y', 'y' } },
                 new SymbolDefinition { Value = 31, EncodeSymbol = 'Z', DecodeSymbols = new[] { 'Z', 'z' } },
             });
+
+            extraCheckDigits.AddRange(new[]
+            {
+                new SymbolDefinition { Value = 32, EncodeSymbol = '*', DecodeSymbols = new[] { '*' } },
+                new SymbolDefinition { Value = 33, EncodeSymbol = '~', DecodeSymbols = new[] { '~' } },
+                new SymbolDefinition { Value = 34, EncodeSymbol = '$', DecodeSymbols = new[] { '$' } },
+                new SymbolDefinition { Value = 35, EncodeSymbol = '=', DecodeSymbols = new[] { '=' } },
+                new SymbolDefinition { Value = 36, EncodeSymbol = 'U', DecodeSymbols = new[] { 'U', 'u' } },
+            });
         }
 
-        public IDictionary<int, char> EncodeMappings
+        public IDictionary<int, char> ValueEncodings
         {
             get
             {
@@ -52,11 +63,32 @@ namespace CrockfordBase32
             }
         }
 
-        public IDictionary<char, int> DecodeMappings
+        public IDictionary<int, char> CheckDigitEncodings
         {
             get
             {
                 return this
+                    .Union(extraCheckDigits)
+                    .ToDictionary(s => s.Value, s => s.EncodeSymbol);
+            }
+        }
+
+        public IDictionary<char, int> ValueDecodings
+        {
+            get
+            {
+                return this
+                    .SelectMany(s => s.DecodeSymbols.Select(d => new { s.Value, DecodeSymbol = d }))
+                    .ToDictionary(s => s.DecodeSymbol, s => s.Value);
+            }
+        }
+
+        public IDictionary<char, int> CheckDigitDecodings
+        {
+            get
+            {
+                return this
+                    .Union(extraCheckDigits)
                     .SelectMany(s => s.DecodeSymbols.Select(d => new { s.Value, DecodeSymbol = d }))
                     .ToDictionary(s => s.DecodeSymbol, s => s.Value);
             }

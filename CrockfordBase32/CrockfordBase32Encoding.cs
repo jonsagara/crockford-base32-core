@@ -8,31 +8,41 @@ namespace CrockfordBase32
     {
         const int Base = 32;
 
-        static readonly IDictionary<int, char> encodeMappings;
-        static readonly IDictionary<char, int> decodeMappings;
+        static readonly IDictionary<int, char> valueEncodings;
+        static readonly IDictionary<int, char> checkDigitEncodings;
         static CrockfordBase32Encoding()
         {
             var symbols = new SymbolDefinitions();
-            encodeMappings = symbols.EncodeMappings;
-            decodeMappings = symbols.DecodeMappings;
+            valueEncodings = symbols.ValueEncodings;
+            checkDigitEncodings = symbols.CheckDigitEncodings;
         }
 
-        public string GetString(int number)
+        public string GetString(int number, bool includeCheckDigit)
         {
             if (number < 0)
                 throw new ArgumentOutOfRangeException("number", number, "Only non-negative values are supported by this encoding mechanism.");
 
             if (number == 0)
-                return encodeMappings[0].ToString();
+            {
+                var result = valueEncodings[0].ToString();
+                if (includeCheckDigit) result += checkDigitEncodings[0].ToString();
+                return result;
+            }
 
             var characters = new List<char>();
+
+            if (includeCheckDigit)
+            {
+                var checkValue = number%37;
+                characters.Add(checkDigitEncodings[checkValue]);
+            }
 
             var nextBase = 1 * Base;
             while (number > 0)
             {
                 var currentValue = number % nextBase;
                 number = (number - currentValue) / Base;
-                characters.Add(encodeMappings[currentValue]);
+                characters.Add(valueEncodings[currentValue]);
                 nextBase *= Base;
             }
 
