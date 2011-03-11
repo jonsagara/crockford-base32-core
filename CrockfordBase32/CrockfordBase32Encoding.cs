@@ -22,39 +22,35 @@ namespace CrockfordBase32
             checkDigitDecodings = symbols.CheckDigitDecodings;
         }
 
-        public string Encode(int number, bool includeCheckDigit)
+        public string Encode(ulong input, bool includeCheckDigit)
         {
-            if (number < 0)
-                throw new ArgumentOutOfRangeException("number", number, "Only non-negative values are supported by this encoding mechanism.");
-
-            if (number == 0)
-            {
-                var result = valueEncodings[0].ToString();
-                if (includeCheckDigit) result += checkDigitEncodings[0].ToString();
-                return result;
-            }
-
-            var characters = new List<char>();
+            var chunks = SplitInto5BitChunks(input);
+            var characters = chunks.Select(chunk => valueEncodings[chunk]);
 
             if (includeCheckDigit)
             {
-                var checkValue = number % CheckDigitBase;
-                characters.Add(checkDigitEncodings[checkValue]);
+                var checkValue = (int)(input % CheckDigitBase);
+                characters = characters.Concat(new [] { checkDigitEncodings[checkValue] });
             }
 
-            var nextBase = 1 * Base;
-            while (number > 0)
-            {
-                var currentValue = number % nextBase;
-                number = (number - currentValue) / Base;
-                characters.Add(valueEncodings[currentValue]);
-                nextBase *= Base;
-            }
-
-            return new string(((IEnumerable<char>)characters).Reverse().ToArray());
+            return new string(characters.ToArray());
         }
 
-        public int? Decode(string encodedString, bool treatLastCharacterAsCheckDigit)
+        internal static IEnumerable<byte> SplitInto5BitChunks(ulong input)
+        {
+            const int bitsPerChunk = 5;
+            const int shift = (sizeof (ulong) * 8) - bitsPerChunk;
+            var chunks = new List<byte>();
+            do
+            {
+                var lastChunk = input << shift >> shift;
+                chunks.Insert(0, (byte)lastChunk);
+                input = input >> bitsPerChunk;
+            } while (input > 0);
+            return chunks;
+        }
+
+        public ulong? Decode(string encodedString, bool treatLastCharacterAsCheckDigit)
         {
             if (encodedString == null)
                 throw new ArgumentNullException("encodedString");
@@ -74,20 +70,20 @@ namespace CrockfordBase32
                 charactersInReverse = charactersInReverse.Skip(1);
             }
 
-            var number = 0;
-            var currentBase = 1;
+            ulong number = 0;
+            ulong currentBase = 1;
             foreach (var character in charactersInReverse)
             {
                 if (!valueDecodings.ContainsKey(character)) return null;
 
                 var value = valueDecodings[character];
-                number += value*currentBase;
+                number += (ulong)value * currentBase;
 
                 currentBase *= Base;
             }
 
             if (expectedCheckValue.HasValue &&
-                number % CheckDigitBase != expectedCheckValue)
+                (int)(number % CheckDigitBase) != expectedCheckValue)
                 return null;
 
             return number;

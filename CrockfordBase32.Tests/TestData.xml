@@ -39,4 +39,9 @@
   <test number="37" encodedString="15" checkDigit="0" />
   <test number="64" encodedString="20" checkDigit="V" />
   <test number="468" encodedString="EM" checkDigit="R" />
+  <test number="3783" encodedString="3P7" checkDigit="9" />
+  <test number="4546" encodedString="4E2" checkDigit="*" />
+  <test number="65535" encodedString="1ZZZ" checkDigit="8" />
+  <!--UInt64::MaxValue-->
+  <test number="18446744073709551615" encodedString="FZZZZZZZZZZZZ" checkDigit="B" />
 </tests>

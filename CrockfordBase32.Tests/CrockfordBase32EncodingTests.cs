@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CrockfordBase32.Tests
@@ -9,17 +10,39 @@ namespace CrockfordBase32.Tests
         public TestContext TestContext { get; set; }
 
         [TestMethod]
-        public void CrockfordBase32Encoding_Encode_ShouldThrowArgumentOutOfRangeExceptionForNegativeNumber()
+        public void CrockfordBase32Encoding_SplitInto5BitChunks_ShouldReturnASingleChunkFor0()
         {
-            try
-            {
-                new CrockfordBase32Encoding().Encode(-1, false);
-                Assert.Fail("Expected exception was never thrown");
-            }
-            catch (ArgumentOutOfRangeException ex)
-            {
-                Assert.AreEqual("number", ex.ParamName);
-            }
+            const int input = 0;
+            var expected = new byte[] { 0 };
+            var actual = CrockfordBase32Encoding.SplitInto5BitChunks(input);
+            CollectionAssert.AreEqual(expected, actual.ToArray());
+        }
+
+        [TestMethod]
+        public void CrockfordBase32Encoding_SplitInto5BitChunks_ShouldNotChunkANumberThatFitsIn5Bits()
+        {
+            const int input = 31;
+            var expected = new byte[] { 31 };
+            var actual = CrockfordBase32Encoding.SplitInto5BitChunks(input);
+            CollectionAssert.AreEqual(expected, actual.ToArray());
+        }
+
+        [TestMethod]
+        public void CrockfordBase32Encoding_SplitInto5BitChunks_ShouldChunkANumberThatFitsIn6Bits()
+        {
+            const int input = 32;
+            var expected = new byte[] { 1, 0 };
+            var actual = CrockfordBase32Encoding.SplitInto5BitChunks(input);
+            CollectionAssert.AreEqual(expected, actual.ToArray());
+        }
+
+        [TestMethod]
+        public void CrockfordBase32Encoding_SplitInto5BitChunks_ShouldChunkANumberThatFitsIn13Bits()
+        {
+            const int input = 4546;
+            var expected = new byte[] { 4, 14, 2 };
+            var actual = CrockfordBase32Encoding.SplitInto5BitChunks(input);
+            CollectionAssert.AreEqual(expected, actual.ToArray());
         }
 
         [TestMethod]
@@ -27,7 +50,7 @@ namespace CrockfordBase32.Tests
         [DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML", @"|DataDirectory|\TestData.xml", "test", DataAccessMethod.Sequential)]
         public void CrockfordBase32Encoding_Encode_ShouldReturnExpectedResult()
         {
-            var number = int.Parse((string)TestContext.DataRow["number"]);
+            var number = ulong.Parse((string)TestContext.DataRow["number"]);
             var expected = (string)TestContext.DataRow["encodedString"];
 
             var actual = new CrockfordBase32Encoding().Encode(number, false);
@@ -40,7 +63,7 @@ namespace CrockfordBase32.Tests
         [DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML", @"|DataDirectory|\TestData.xml", "test", DataAccessMethod.Sequential)]
         public void CrockfordBase32Encoding_Encode_ShouldReturnExpectedResultWithCheckDigit()
         {
-            var number = int.Parse((string)TestContext.DataRow["number"]);
+            var number = ulong.Parse((string)TestContext.DataRow["number"]);
             var expected = (string)TestContext.DataRow["encodedString"];
             var checkDigit = (string)TestContext.DataRow["checkDigit"];
 
@@ -87,7 +110,7 @@ namespace CrockfordBase32.Tests
         public void CrockfordBase32Encoding_Decode_ShouldReturnExpectedResult()
         {
             var encodedString = (string)TestContext.DataRow["encodedString"];
-            var expected = int.Parse((string)TestContext.DataRow["number"]);
+            var expected = ulong.Parse((string)TestContext.DataRow["number"]);
             
             var actual = new CrockfordBase32Encoding().Decode(encodedString, false);
 
@@ -101,7 +124,7 @@ namespace CrockfordBase32.Tests
         {
             var encodedString = (string)TestContext.DataRow["encodedString"];
             var checkDigit = (string)TestContext.DataRow["checkDigit"];
-            var expected = int.Parse((string)TestContext.DataRow["number"]);
+            var expected = ulong.Parse((string)TestContext.DataRow["number"]);
 
             var actual = new CrockfordBase32Encoding().Decode(encodedString + checkDigit, true);
 
