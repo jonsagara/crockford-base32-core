@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CrockfordBase32.Tests
 {
@@ -6,6 +7,20 @@ namespace CrockfordBase32.Tests
     public class CrockfordBase32EncodingTests
     {
         public TestContext TestContext { get; set; }
+
+        [TestMethod]
+        public void CrockfordBase32Encoding_GetString_ShouldThrowArgumentOutOfRangeExceptionForNegativeNumber()
+        {
+            try
+            {
+                new CrockfordBase32Encoding().GetString(-1);
+                Assert.Fail("Expected exception was never thrown");
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                Assert.AreEqual("number", ex.ParamName);
+            }
+        }
 
         [TestMethod]
         [DeploymentItem(@"CrockfordBase32.Tests\TestData.xml")]

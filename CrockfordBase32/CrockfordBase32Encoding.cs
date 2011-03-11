@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CrockfordBase32
@@ -18,6 +19,9 @@ namespace CrockfordBase32
 
         public string GetString(int number)
         {
+            if (number < 0)
+                throw new ArgumentOutOfRangeException("number", number, "Only non-negative values are supported by this encoding mechanism.");
+
             if (number == 0)
                 return encodeMappings[0].ToString();
 
