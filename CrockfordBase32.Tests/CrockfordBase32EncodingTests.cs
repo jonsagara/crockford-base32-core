@@ -93,5 +93,46 @@ namespace CrockfordBase32.Tests
 
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        [DeploymentItem(@"CrockfordBase32.Tests\TestData.xml")]
+        [DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML", @"|DataDirectory|\TestData.xml", "test", DataAccessMethod.Sequential)]
+        public void CrockfordBase32Encoding_Decode_ShouldReturnExpectedResultWithValidCheckDigit()
+        {
+            var encodedString = (string)TestContext.DataRow["encodedString"];
+            var checkDigit = (string)TestContext.DataRow["checkDigit"];
+            var expected = int.Parse((string)TestContext.DataRow["number"]);
+
+            var actual = new CrockfordBase32Encoding().Decode(encodedString + checkDigit, true);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem(@"CrockfordBase32.Tests\TestData.xml")]
+        [DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML", @"|DataDirectory|\TestData.xml", "test", DataAccessMethod.Sequential)]
+        public void CrockfordBase32Encoding_Decode_ShouldReturnNullForInvalidCheckDigit()
+        {
+            var encodedString = (string)TestContext.DataRow["encodedString"];
+
+            var actual = new CrockfordBase32Encoding().Decode(encodedString + '#', true);
+
+            Assert.IsNull(actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem(@"CrockfordBase32.Tests\TestData.xml")]
+        [DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML", @"|DataDirectory|\TestData.xml", "test", DataAccessMethod.Sequential)]
+        public void CrockfordBase32Encoding_Decode_ShouldReturnNullForIncorrectCheckDigit()
+        {
+            var encodedString = (string)TestContext.DataRow["encodedString"];
+            var checkDigit = (string)TestContext.DataRow["checkDigit"];
+            
+            checkDigit = checkDigit.Equals("a", StringComparison.OrdinalIgnoreCase) ? "b" : "a";
+
+            var actual = new CrockfordBase32Encoding().Decode(encodedString + checkDigit, true);
+
+            Assert.IsNull(actual);
+        }
     }
 }

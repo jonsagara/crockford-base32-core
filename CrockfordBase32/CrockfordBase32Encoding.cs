@@ -7,16 +7,19 @@ namespace CrockfordBase32
     public class CrockfordBase32Encoding
     {
         const int Base = 32;
+        const int CheckDigitBase = 37;
 
         static readonly IDictionary<int, char> valueEncodings;
         static readonly IDictionary<int, char> checkDigitEncodings;
         static readonly IDictionary<char, int> valueDecodings;
+        static readonly IDictionary<char, int> checkDigitDecodings;
         static CrockfordBase32Encoding()
         {
             var symbols = new SymbolDefinitions();
             valueEncodings = symbols.ValueEncodings;
             checkDigitEncodings = symbols.CheckDigitEncodings;
             valueDecodings = symbols.ValueDecodings;
+            checkDigitDecodings = symbols.CheckDigitDecodings;
         }
 
         public string Encode(int number, bool includeCheckDigit)
@@ -35,7 +38,7 @@ namespace CrockfordBase32
 
             if (includeCheckDigit)
             {
-                var checkValue = number%37;
+                var checkValue = number % CheckDigitBase;
                 characters.Add(checkDigitEncodings[checkValue]);
             }
 
@@ -53,16 +56,23 @@ namespace CrockfordBase32
 
         public int? Decode(string encodedString, bool treatLastCharacterAsCheckDigit)
         {
-            if (treatLastCharacterAsCheckDigit)
-                throw new NotSupportedException();
-
             if (encodedString == null)
                 throw new ArgumentNullException("encodedString");
 
             if (encodedString.Length == 0)
                 return null;
 
-            var charactersInReverse = encodedString.Reverse().ToArray();
+            IEnumerable<char> charactersInReverse = encodedString.Reverse().ToArray();
+
+            int? expectedCheckValue = null;
+            if (treatLastCharacterAsCheckDigit)
+            {
+                var checkDigit = charactersInReverse.First();
+                if (!checkDigitDecodings.ContainsKey(checkDigit)) return null;
+                expectedCheckValue = checkDigitDecodings[checkDigit];
+
+                charactersInReverse = charactersInReverse.Skip(1);
+            }
 
             var number = 0;
             var currentBase = 1;
@@ -75,6 +85,10 @@ namespace CrockfordBase32
 
                 currentBase *= Base;
             }
+
+            if (expectedCheckValue.HasValue &&
+                number % CheckDigitBase != expectedCheckValue)
+                return null;
 
             return number;
         }
