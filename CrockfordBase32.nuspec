@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>crockford-base32</id>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <authors>Tatham Oddie</authors>
     <description>A .NET implementation of Crockford's Base32 encoding that works great for URLs and humans.</description>
     <language>en-US</language>
