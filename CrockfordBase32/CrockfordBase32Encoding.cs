@@ -17,7 +17,7 @@ namespace CrockfordBase32
             checkDigitEncodings = symbols.CheckDigitEncodings;
         }
 
-        public string GetString(int number, bool includeCheckDigit)
+        public string Encode(int number, bool includeCheckDigit)
         {
             if (number < 0)
                 throw new ArgumentOutOfRangeException("number", number, "Only non-negative values are supported by this encoding mechanism.");

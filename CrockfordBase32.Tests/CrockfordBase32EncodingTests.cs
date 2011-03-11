@@ -9,11 +9,11 @@ namespace CrockfordBase32.Tests
         public TestContext TestContext { get; set; }
 
         [TestMethod]
-        public void CrockfordBase32Encoding_GetString_ShouldThrowArgumentOutOfRangeExceptionForNegativeNumber()
+        public void CrockfordBase32Encoding_Encode_ShouldThrowArgumentOutOfRangeExceptionForNegativeNumber()
         {
             try
             {
-                new CrockfordBase32Encoding().GetString(-1, false);
+                new CrockfordBase32Encoding().Encode(-1, false);
                 Assert.Fail("Expected exception was never thrown");
             }
             catch (ArgumentOutOfRangeException ex)
@@ -25,12 +25,12 @@ namespace CrockfordBase32.Tests
         [TestMethod]
         [DeploymentItem(@"CrockfordBase32.Tests\TestData.xml")]
         [DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML", @"|DataDirectory|\TestData.xml", "test", DataAccessMethod.Sequential)]
-        public void CrockfordBase32Encoding_GetString_ShouldReturnExpectedResult()
+        public void CrockfordBase32Encoding_Encode_ShouldReturnExpectedResult()
         {
             var number = int.Parse((string)TestContext.DataRow["number"]);
             var expected = (string)TestContext.DataRow["encodedString"];
 
-            var actual = new CrockfordBase32Encoding().GetString(number, false);
+            var actual = new CrockfordBase32Encoding().Encode(number, false);
 
             Assert.AreEqual(expected, actual);
         }
@@ -38,13 +38,13 @@ namespace CrockfordBase32.Tests
         [TestMethod]
         [DeploymentItem(@"CrockfordBase32.Tests\TestData.xml")]
         [DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML", @"|DataDirectory|\TestData.xml", "test", DataAccessMethod.Sequential)]
-        public void CrockfordBase32Encoding_GetString_ShouldReturnExpectedResultWithCheckDigit()
+        public void CrockfordBase32Encoding_Encode_ShouldReturnExpectedResultWithCheckDigit()
         {
             var number = int.Parse((string)TestContext.DataRow["number"]);
             var expected = (string)TestContext.DataRow["encodedString"];
             var checkDigit = (string)TestContext.DataRow["checkDigit"];
 
-            var actual = new CrockfordBase32Encoding().GetString(number, true);
+            var actual = new CrockfordBase32Encoding().Encode(number, true);
 
             Assert.AreEqual(expected + checkDigit, actual);
         }
