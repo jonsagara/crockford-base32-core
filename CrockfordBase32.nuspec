@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>crockford-base32</id>
+    <version>1.0.0</version>
+    <authors>Tatham Oddie</authors>
+    <description>A .NET implementation of Crockford's Base32 encoding that works great for URLs and humans.</description>
+    <language>en-US</language>
+    <projectUrl>http://crockfordbase32.codeplex.com/</projectUrl>
+    <licenseUrl>http://crockfordbase32.codeplex.com/license</licenseUrl>
+  </metadata>
+  <files>
+    <file src="CrockfordBase32\bin\Release\*.dll" target="lib" />
+    <file src="CrockfordBase32\bin\Release\*.pdb" target="lib" />
+  </files>
+</package>
