@@ -8,16 +8,13 @@ namespace CrockfordBase32.Tests.Core
 {
     public class CrockfordBase32EncodingTests
     {
-        /*
-        public TestContext TestContext { get; set; }
-
         [Fact]
         public void CrockfordBase32Encoding_SplitInto5BitChunks_ShouldReturnASingleChunkFor0()
         {
             const int input = 0;
             var expected = new byte[] { 0 };
             var actual = CrockfordBase32Encoding.SplitInto5BitChunks(input);
-            CollectionAssert.AreEqual(expected, actual.ToArray());
+            Assert.Equal(expected, actual.ToArray());
         }
 
         [Fact]
@@ -26,7 +23,7 @@ namespace CrockfordBase32.Tests.Core
             const int input = 31;
             var expected = new byte[] { 31 };
             var actual = CrockfordBase32Encoding.SplitInto5BitChunks(input);
-            CollectionAssert.AreEqual(expected, actual.ToArray());
+            Assert.Equal(expected, actual.ToArray());
         }
 
         [Fact]
@@ -35,7 +32,7 @@ namespace CrockfordBase32.Tests.Core
             const int input = 32;
             var expected = new byte[] { 1, 0 };
             var actual = CrockfordBase32Encoding.SplitInto5BitChunks(input);
-            CollectionAssert.AreEqual(expected, actual.ToArray());
+            Assert.Equal(expected, actual.ToArray());
         }
 
         [Fact]
@@ -44,8 +41,11 @@ namespace CrockfordBase32.Tests.Core
             const int input = 4546;
             var expected = new byte[] { 4, 14, 2 };
             var actual = CrockfordBase32Encoding.SplitInto5BitChunks(input);
-            CollectionAssert.AreEqual(expected, actual.ToArray());
+            Assert.Equal(expected, actual.ToArray());
         }
+
+        /*
+        public TestContext TestContext { get; set; }
 
         [Fact]
         [DeploymentItem(@"CrockfordBase32.Tests\TestData.xml")]
@@ -73,6 +73,7 @@ namespace CrockfordBase32.Tests.Core
 
             Assert.AreEqual(expected + checkDigit, actual);
         }
+        */
 
         [Fact]
         public void CrockfordBase32Encoding_Decode_ShouldThrowArgumentNullExceptionForNullInput()
@@ -80,32 +81,33 @@ namespace CrockfordBase32.Tests.Core
             try
             {
                 new CrockfordBase32Encoding().Decode(null, false);
-                Assert.Fail("Expected exception was never thrown");
+                Assert.True(false, "Expected exception was never thrown");
             }
             catch (ArgumentNullException ex)
             {
-                Assert.AreEqual("encodedString", ex.ParamName);
+                Assert.Equal("encodedString", ex.ParamName);
             }
         }
 
         [Fact]
         public void CrockfordBase32Encoding_Decode_ShouldReturnNullForBadCharacter()
         {
-            Assert.IsNull(new CrockfordBase32Encoding().Decode("/", false));
+            Assert.Null(new CrockfordBase32Encoding().Decode("/", false));
         }
 
         [Fact]
         public void CrockfordBase32Encoding_Decode_ShouldReturnNullForBadCharacterWithinValidOtherwiseInput()
         {
-            Assert.IsNull(new CrockfordBase32Encoding().Decode("a/b", false));
+            Assert.Null(new CrockfordBase32Encoding().Decode("a/b", false));
         }
 
         [Fact]
         public void CrockfordBase32Encoding_Decode_ShouldReturnNullForEmptyString()
         {
-            Assert.IsNull(new CrockfordBase32Encoding().Decode(string.Empty, false));
+            Assert.Null(new CrockfordBase32Encoding().Decode(string.Empty, false));
         }
 
+        /*
         [Fact]
         [DeploymentItem(@"CrockfordBase32.Tests\TestData.xml")]
         [DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML", @"|DataDirectory|\TestData.xml", "test", DataAccessMethod.Sequential)]
