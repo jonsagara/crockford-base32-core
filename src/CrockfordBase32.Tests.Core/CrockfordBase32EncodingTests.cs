@@ -44,36 +44,30 @@ namespace CrockfordBase32.Tests.Core
             Assert.Equal(expected, actual.ToArray());
         }
 
-        /*
-        public TestContext TestContext { get; set; }
-
-        [Fact]
-        [DeploymentItem(@"CrockfordBase32.Tests\TestData.xml")]
-        [DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML", @"|DataDirectory|\TestData.xml", "test", DataAccessMethod.Sequential)]
-        public void CrockfordBase32Encoding_Encode_ShouldReturnExpectedResult()
+        [Theory]
+        [ClassData(typeof(TestDataGenerator))]
+        public void CrockfordBase32Encoding_Encode_ShouldReturnExpectedResult(TestDatum datum)
         {
-            var number = ulong.Parse((string)TestContext.DataRow["number"]);
-            var expected = (string)TestContext.DataRow["encodedString"];
+            var number = ulong.Parse(datum.Number);
+            var expected = datum.EncodedString;
 
             var actual = new CrockfordBase32Encoding().Encode(number, false);
 
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
-        [Fact]
-        [DeploymentItem(@"CrockfordBase32.Tests\TestData.xml")]
-        [DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML", @"|DataDirectory|\TestData.xml", "test", DataAccessMethod.Sequential)]
-        public void CrockfordBase32Encoding_Encode_ShouldReturnExpectedResultWithCheckDigit()
+        [Theory]
+        [ClassData(typeof(TestDataGenerator))]
+        public void CrockfordBase32Encoding_Encode_ShouldReturnExpectedResultWithCheckDigit(TestDatum datum)
         {
-            var number = ulong.Parse((string)TestContext.DataRow["number"]);
-            var expected = (string)TestContext.DataRow["encodedString"];
-            var checkDigit = (string)TestContext.DataRow["checkDigit"];
+            var number = ulong.Parse(datum.Number);
+            var expected = datum.EncodedString;
+            var checkDigit = datum.CheckDigit;
 
             var actual = new CrockfordBase32Encoding().Encode(number, true);
 
-            Assert.AreEqual(expected + checkDigit, actual);
+            Assert.Equal(expected + checkDigit, actual);
         }
-        */
 
         [Fact]
         public void CrockfordBase32Encoding_Decode_ShouldThrowArgumentNullExceptionForNullInput()
@@ -107,60 +101,54 @@ namespace CrockfordBase32.Tests.Core
             Assert.Null(new CrockfordBase32Encoding().Decode(string.Empty, false));
         }
 
-        /*
-        [Fact]
-        [DeploymentItem(@"CrockfordBase32.Tests\TestData.xml")]
-        [DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML", @"|DataDirectory|\TestData.xml", "test", DataAccessMethod.Sequential)]
-        public void CrockfordBase32Encoding_Decode_ShouldReturnExpectedResult()
+        [Theory]
+        [ClassData(typeof(TestDataGenerator))]
+        public void CrockfordBase32Encoding_Decode_ShouldReturnExpectedResult(TestDatum datum)
         {
-            var encodedString = (string)TestContext.DataRow["encodedString"];
-            var expected = ulong.Parse((string)TestContext.DataRow["number"]);
+            var encodedString = datum.EncodedString;
+            var expected = ulong.Parse(datum.Number);
 
             var actual = new CrockfordBase32Encoding().Decode(encodedString, false);
 
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
-        [Fact]
-        [DeploymentItem(@"CrockfordBase32.Tests\TestData.xml")]
-        [DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML", @"|DataDirectory|\TestData.xml", "test", DataAccessMethod.Sequential)]
-        public void CrockfordBase32Encoding_Decode_ShouldReturnExpectedResultWithValidCheckDigit()
+        [Theory]
+        [ClassData(typeof(TestDataGenerator))]
+        public void CrockfordBase32Encoding_Decode_ShouldReturnExpectedResultWithValidCheckDigit(TestDatum datum)
         {
-            var encodedString = (string)TestContext.DataRow["encodedString"];
-            var checkDigit = (string)TestContext.DataRow["checkDigit"];
-            var expected = ulong.Parse((string)TestContext.DataRow["number"]);
+            var encodedString = datum.EncodedString;
+            var checkDigit = datum.CheckDigit;
+            var expected = ulong.Parse(datum.Number);
 
             var actual = new CrockfordBase32Encoding().Decode(encodedString + checkDigit, true);
 
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
-        [Fact]
-        [DeploymentItem(@"CrockfordBase32.Tests\TestData.xml")]
-        [DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML", @"|DataDirectory|\TestData.xml", "test", DataAccessMethod.Sequential)]
-        public void CrockfordBase32Encoding_Decode_ShouldReturnNullForInvalidCheckDigit()
+        [Theory]
+        [ClassData(typeof(TestDataGenerator))]
+        public void CrockfordBase32Encoding_Decode_ShouldReturnNullForInvalidCheckDigit(TestDatum datum)
         {
-            var encodedString = (string)TestContext.DataRow["encodedString"];
+            var encodedString = datum.EncodedString;
 
             var actual = new CrockfordBase32Encoding().Decode(encodedString + '#', true);
 
-            Assert.IsNull(actual);
+            Assert.Null(actual);
         }
 
-        [Fact]
-        [DeploymentItem(@"CrockfordBase32.Tests\TestData.xml")]
-        [DataSource("Microsoft.VisualStudio.TestTools.DataSource.XML", @"|DataDirectory|\TestData.xml", "test", DataAccessMethod.Sequential)]
-        public void CrockfordBase32Encoding_Decode_ShouldReturnNullForIncorrectCheckDigit()
+        [Theory]
+        [ClassData(typeof(TestDataGenerator))]
+        public void CrockfordBase32Encoding_Decode_ShouldReturnNullForIncorrectCheckDigit(TestDatum datum)
         {
-            var encodedString = (string)TestContext.DataRow["encodedString"];
-            var checkDigit = (string)TestContext.DataRow["checkDigit"];
+            var encodedString = datum.EncodedString;
+            var checkDigit = datum.CheckDigit;
 
             checkDigit = checkDigit.Equals("a", StringComparison.OrdinalIgnoreCase) ? "b" : "a";
 
             var actual = new CrockfordBase32Encoding().Decode(encodedString + checkDigit, true);
 
-            Assert.IsNull(actual);
+            Assert.Null(actual);
         }
-        */
     }
 }
