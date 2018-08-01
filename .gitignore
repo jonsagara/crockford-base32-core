@@ -15,4 +15,5 @@ src/packages/
 ClientBin/
 App_Data/
 .vs/
+.fake/
 
