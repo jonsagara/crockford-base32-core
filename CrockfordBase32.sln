@@ -7,10 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrockfordBase32", "src\Croc
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E4EB6946-4E2D-4090-BB92-9D4B93C0B68C}"
 	ProjectSection(SolutionItems) = preProject
-		CrockfordBase32.nuspec = CrockfordBase32.nuspec
+		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrockfordBase32.Tests.Core", "src\CrockfordBase32.Tests.Core\CrockfordBase32.Tests.Core.csproj", "{2D6B8EE4-BA88-468C-9AAD-CA73997838A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrockfordBase32.Tests.Core", "src\CrockfordBase32.Tests.Core\CrockfordBase32.Tests.Core.csproj", "{2D6B8EE4-BA88-468C-9AAD-CA73997838A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
