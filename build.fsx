@@ -30,10 +30,15 @@ Target.create "RunTests" (fun _ ->
 Target.create "CreateNuGetPackage" (fun _ ->
 
     let setOptions (opt:DotNet.PackOptions) =
-        { opt with 
-            Configuration = DotNet.BuildConfiguration.Release
-            NoBuild = true
-            OutputPath = Some "../../artifacts/" }
+        // Set dotnet pack configuration properties
+        let opt = { 
+            opt with 
+                Configuration = DotNet.BuildConfiguration.Release
+                NoBuild = true
+                OutputPath = Some "../../artifacts/" }
+
+        // Pass custom parameters to dotnet
+        opt.WithCommon (fun o -> { o with CustomParams = Some "--include-symbols --no-restore" })
 
     DotNet.pack setOptions "./src/CrockfordBase32/CrockfordBase32.csproj"
 )
