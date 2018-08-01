@@ -12,7 +12,7 @@
     <RepositoryUrl>https://github.com/jonsagara/crockford-base32-core</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>crockford base32</PackageTags>
-    <Version>1.1.0-alpha1</Version>
+    <Version>1.1.0</Version>
     <Authors>Tatham Oddie, jonsagara</Authors>
     <Description>A .NET Standard implementation of Crockford's Base32 encoding that works great for URLs and humans.</Description>
   </PropertyGroup>

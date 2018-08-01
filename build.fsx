@@ -24,7 +24,7 @@ Target.create "BuildProject" (fun _ ->
 )
 
 Target.create "RunTests" (fun _ ->
-    DotNet.test (fun opt -> { opt with Configuration = DotNet.BuildConfiguration.Release }) @".\src\CrockfordBase32.Tests.Core\CrockfordBase32.Tests.Core.csproj"
+    DotNet.test (fun opt -> { opt with Configuration = DotNet.BuildConfiguration.Release }) @"./src/CrockfordBase32.Tests.Core/CrockfordBase32.Tests.Core.csproj"
 )
 
 Target.create "CreateNuGetPackage" (fun _ ->
