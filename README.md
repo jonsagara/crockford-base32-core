@@ -1,23 +1,23 @@
-## What is this?
+## How do I install this library?
 
-A repackaging of the old [crockford-base32](https://www.nuget.org/packages/crockford-base32) nuget package to support `.NET Standard 1.3`.
+Install [crockford-base32-core](https://www.nuget.org/packages/crockford-base32-core/) via nuget:
+
+```
+Install-Package crockford-base32-core -Version 1.1.0
+```
+
+## What is it?
+
+A repackaging of the [original crockford-base32 nuget package](https://www.nuget.org/packages/crockford-base32) to support `.NET Standard 1.3`.
 
 ## Why does it exist?
 
-The [crockford-base32](https://www.nuget.org/packages/crockford-base32) nuget package does not support `.NET Core` or `.NET Standard`.
+The original crockford-base32 nuget package does not support `.NET Core` or `.NET Standard`.
 
 ## What changes did you make?
 
 * Targeted `.NET Standard 1.3` 
 * Migrated the unit tests to use `xUnit`
-
-## How do I use it?
-
-Install the [crockford-base32-core](https://www.nuget.org/packages/crockford-base32-core/) package via nuget:
-
-```
-Install-Package crockford-base32-core -Version 1.1.0
-```
 
 ## How do I build it?
 
