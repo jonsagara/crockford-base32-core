@@ -3,7 +3,7 @@
 Install [crockford-base32-core](https://www.nuget.org/packages/crockford-base32-core/) via nuget:
 
 ```
-Install-Package crockford-base32-core -Version 1.1.0
+Install-Package crockford-base32-core -Version 1.2.0
 ```
 
 ## What is it?
