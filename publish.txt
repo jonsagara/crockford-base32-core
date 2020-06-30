@@ -1,1 +1,2 @@
-dotnet nuget push .\crockford-base32-core.1.2.0.nupkg -k {crockford-base32-core-api-key} -s https://api.nuget.org/v3/index.json
+dotnet nuget push .\artifacts\crockford-base32-core.2.0.0-alpha2.nupkg -k {crockford-base32-core-api-key} -s https://api.nuget.org/v3/index.json
+dotnet nuget push .\artifacts\crockford-base32-core.2.0.0-alpha2.snupkg -k {crockford-base32-core-api-key} -s https://api.nuget.org/v3/index.json

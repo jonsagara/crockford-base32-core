@@ -36,7 +36,7 @@ Target.create "CreateNuGetPackage" (fun _ ->
             opt with 
                 Configuration = DotNet.BuildConfiguration.Release
                 NoBuild = true
-                OutputPath = Some "../../artifacts/" }
+                OutputPath = Some "./artifacts/" }
 
         // Pass custom parameters to dotnet
         opt.WithCommon (fun o -> { o with CustomParams = Some "--include-symbols --no-restore" })

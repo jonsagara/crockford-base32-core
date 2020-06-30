@@ -3,24 +3,27 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <Title>CrockfordBase32</Title>
+	<Version>2.0.0-alpha2</Version>
+	<Authors>Tatham Oddie, jonsagara</Authors>
+	<Description>A .NET Standard implementation of Crockford's Base32 encoding that works great for URLs and humans.</Description>
     <Company>Tatham Oddie</Company>
-    <Product>CrockfordBase32</Product>
     <Copyright>Copyright © Tatham Oddie 2011. Licensed under MS-PL.</Copyright>
+	<Product>CrockfordBase32</Product>
     <PackageId>crockford-base32-core</PackageId>
     <PackageProjectUrl>https://github.com/jonsagara/crockford-base32-core</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/jonsagara/crockford-base32-core/blob/master/LICENSE.md</PackageLicenseUrl>
+	<PackageLicenseExpression>MS-PL</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/jonsagara/crockford-base32-core</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>crockford base32</PackageTags>
-    <Version>1.2.0</Version>
-    <Authors>Tatham Oddie, jonsagara</Authors>
-    <Description>A .NET Standard implementation of Crockford's Base32 encoding that works great for URLs and humans.</Description>
 
     <!-- Optional: Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
 
     <!-- Optional: Embed source files that are not tracked by the source control manager in the PDB -->
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+	<IncludeSymbols>true</IncludeSymbols>
+	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
     <!-- Optional: Include the PDB in the built .nupkg -->
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>

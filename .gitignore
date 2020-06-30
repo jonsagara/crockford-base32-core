@@ -17,4 +17,4 @@ App_Data/
 .vs/
 .fake/
 artifacts/
-
+.ionide/
