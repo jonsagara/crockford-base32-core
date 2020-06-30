@@ -3,12 +3,12 @@
 Install [crockford-base32-core](https://www.nuget.org/packages/crockford-base32-core/) via nuget:
 
 ```
-Install-Package crockford-base32-core -Version 1.2.0
+Install-Package crockford-base32-core -Version 2.0.0
 ```
 
 ## What is it?
 
-A repackaging of the [original crockford-base32 nuget package](https://www.nuget.org/packages/crockford-base32) to support `.NET Standard 1.3`.
+A repackaging of the [original crockford-base32 nuget package](https://www.nuget.org/packages/crockford-base32) to support `netstandard2.0` and `.netstandard2.1`.
 
 ## Why does it exist?
 
@@ -16,18 +16,18 @@ The original crockford-base32 nuget package does not support `.NET Core` or `.NE
 
 ## What changes did you make?
 
-* Targeted `.NET Standard 1.3` 
+* Targeted `.netstandard2.0` and `.netstandard2.1`
 * Migrated the unit tests to use `xUnit`
 
 ## How do I build it?
 
-### Visual Studio 2017
+### Visual Studio 2019
 
 Open `CrockfordBase32.sln` and compile.
 
 ### FAKE
 
-* Ensure you have [.NET Core SDK 2.1.302](https://www.microsoft.com/net/download/dotnet-core/2.1) or higher installed
+* Ensure you have [.NET Core SDK 3.1.300](https://dotnet.microsoft.com/download) or higher installed
 * Ensure you have [FAKE](https://fake.build/) installed:
 
   ```
