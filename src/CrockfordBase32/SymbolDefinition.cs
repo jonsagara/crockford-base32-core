@@ -5,7 +5,7 @@ namespace CrockfordBase32
     internal class SymbolDefinition
     {
         public int Value { get; set; }
-        public IEnumerable<char> DecodeSymbols { get; set; }
+        public IEnumerable<char> DecodeSymbols { get; set; } = null!;
         public char EncodeSymbol { get; set; }
     }
 }
