@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <Title>CrockfordBase32</Title>
-	<Version>2.0.0-alpha3</Version>
+	<Version>2.0.0</Version>
 	<Authors>Tatham Oddie, jonsagara</Authors>
 	<Description>A .NET Standard implementation of Crockford's Base32 encoding that works great for URLs and humans.</Description>
     <Company>Tatham Oddie</Company>
