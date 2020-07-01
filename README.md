@@ -8,7 +8,7 @@ Install-Package crockford-base32-core -Version 2.0.0
 
 ## What is it?
 
-A repackaging of the [original crockford-base32 nuget package](https://www.nuget.org/packages/crockford-base32) to support `netstandard2.0` and `.netstandard2.1`.
+A repackaging of the [original crockford-base32 nuget package](https://www.nuget.org/packages/crockford-base32) to support `netstandard2.0` and `netstandard2.1`.
 
 ## Why does it exist?
 
