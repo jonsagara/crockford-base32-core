@@ -16,7 +16,7 @@ The original crockford-base32 nuget package does not support `.NET Core` or `.NE
 
 ## What changes did you make?
 
-* Targeted `.netstandard2.0` and `.netstandard2.1`
+* Targeted `netstandard2.0` and `netstandard2.1`
 * Migrated the unit tests to use `xUnit`
 
 ## How do I build it?
