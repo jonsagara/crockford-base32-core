@@ -15,5 +15,17 @@
             var result = CrockfordBase32Encoding.EncodeMultipleBytesAsSeparateUlongs(input, checkDigit);
             Assert.Equal(expected, result);
         }
+
+        [Theory]
+        [InlineData(new ulong[] { 0x000102030405060708, 0x090A0B0C0D0E0F }, "E1G50G1G4080PY3GD1G5GM2880GG")]
+        [InlineData(new ulong[] { 0xFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFF }, "FZZZZZZZZZZZZBFZZZZZZZZZZZZB")]
+        public void CrockfordBase32Encoding_DecodeTwoUlongs(ulong[] expected, string input)
+        {
+            var result = CrockfordBase32Encoding.DecodeMultipleCheckDigitEncoded(input);
+            var castedResult = CrockfordBase32Encoding.CastAndThrowIfNull(result);
+
+            Assert.Equal(expected, castedResult);
+        }
+
     }
 }
