@@ -68,7 +68,7 @@
         public static IEnumerable<string> SplitEncodedByCheckDigits(string input)
         {
             List<string> results = new List<string>();
-            char[] digits = checkDigitEncodings.Values.ToArray<char>();
+            char[] digits = new char[] { '*', '~', '$', '=', 'U', 'u' };
             int lastOffset = 0;
             for (int i = 0; i < input.Length; i++)
             {
@@ -124,7 +124,7 @@
             ulong[] result = new ulong[input.Count()];
             foreach (var item in input)
             {
-                if (item is null)
+                if (!item.HasValue)
                 {
                     throw new Exception(String.Format("item {0} is null", i));
                 }
