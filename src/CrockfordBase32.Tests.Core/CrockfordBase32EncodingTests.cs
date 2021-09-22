@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Xunit;
-
-namespace CrockfordBase32.Tests.Core
+﻿namespace CrockfordBase32.Tests.Core
 {
-    public class CrockfordBase32EncodingTests
+    using System;
+    using System.Linq;
+    using CrockfordBase32;
+    using Xunit;
+
+    public partial class CrockfordBase32EncodingTests
     {
         [Fact]
         public void CrockfordBase32Encoding_SplitInto5BitChunks_ShouldReturnASingleChunkFor0()
@@ -51,7 +50,7 @@ namespace CrockfordBase32.Tests.Core
             var number = ulong.Parse(datum.Number);
             var expected = datum.EncodedString;
 
-            var actual = new CrockfordBase32Encoding().Encode(number, false);
+            var actual = CrockfordBase32Encoding.Encode(number, false);
 
             Assert.Equal(expected, actual);
         }
@@ -64,7 +63,7 @@ namespace CrockfordBase32.Tests.Core
             var expected = datum.EncodedString;
             var checkDigit = datum.CheckDigit;
 
-            var actual = new CrockfordBase32Encoding().Encode(number, true);
+            var actual = CrockfordBase32Encoding.Encode(number, true);
 
             Assert.Equal(expected + checkDigit, actual);
         }
@@ -74,7 +73,7 @@ namespace CrockfordBase32.Tests.Core
         {
             try
             {
-                new CrockfordBase32Encoding().Decode(null, false);
+                CrockfordBase32Encoding.Decode(null, false);
                 Assert.True(false, "Expected exception was never thrown");
             }
             catch (ArgumentNullException ex)
@@ -86,19 +85,19 @@ namespace CrockfordBase32.Tests.Core
         [Fact]
         public void CrockfordBase32Encoding_Decode_ShouldReturnNullForBadCharacter()
         {
-            Assert.Null(new CrockfordBase32Encoding().Decode("/", false));
+            Assert.Null(CrockfordBase32Encoding.Decode("/", false));
         }
 
         [Fact]
         public void CrockfordBase32Encoding_Decode_ShouldReturnNullForBadCharacterWithinValidOtherwiseInput()
         {
-            Assert.Null(new CrockfordBase32Encoding().Decode("a/b", false));
+            Assert.Null(CrockfordBase32Encoding.Decode("a/b", false));
         }
 
         [Fact]
         public void CrockfordBase32Encoding_Decode_ShouldReturnNullForEmptyString()
         {
-            Assert.Null(new CrockfordBase32Encoding().Decode(string.Empty, false));
+            Assert.Null(CrockfordBase32Encoding.Decode(string.Empty, false));
         }
 
         [Theory]
@@ -108,7 +107,7 @@ namespace CrockfordBase32.Tests.Core
             var encodedString = datum.EncodedString;
             var expected = ulong.Parse(datum.Number);
 
-            var actual = new CrockfordBase32Encoding().Decode(encodedString, false);
+            var actual = CrockfordBase32Encoding.Decode(encodedString, false);
 
             Assert.Equal(expected, actual);
         }
@@ -121,7 +120,7 @@ namespace CrockfordBase32.Tests.Core
             var checkDigit = datum.CheckDigit;
             var expected = ulong.Parse(datum.Number);
 
-            var actual = new CrockfordBase32Encoding().Decode(encodedString + checkDigit, true);
+            var actual = CrockfordBase32Encoding.Decode(encodedString + checkDigit, true);
 
             Assert.Equal(expected, actual);
         }
@@ -132,7 +131,7 @@ namespace CrockfordBase32.Tests.Core
         {
             var encodedString = datum.EncodedString;
 
-            var actual = new CrockfordBase32Encoding().Decode(encodedString + '#', true);
+            var actual = CrockfordBase32Encoding.Decode(encodedString + '#', true);
 
             Assert.Null(actual);
         }
@@ -146,7 +145,7 @@ namespace CrockfordBase32.Tests.Core
 
             checkDigit = checkDigit.Equals("a", StringComparison.OrdinalIgnoreCase) ? "b" : "a";
 
-            var actual = new CrockfordBase32Encoding().Decode(encodedString + checkDigit, true);
+            var actual = CrockfordBase32Encoding.Decode(encodedString + checkDigit, true);
 
             Assert.Null(actual);
         }

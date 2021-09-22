@@ -1,92 +1,180 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace CrockfordBase32
+﻿namespace CrockfordBase32
 {
-    public class CrockfordBase32Encoding
-    {
-        const int Base = 32;
-        const int CheckDigitBase = 37;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
-        static readonly IDictionary<int, char> valueEncodings;
-        static readonly IDictionary<int, char> checkDigitEncodings;
-        static readonly IDictionary<char, int> valueDecodings;
-        static readonly IDictionary<char, int> checkDigitDecodings;
+    public static class CrockfordBase32Encoding
+    {
+        public const int Base = 32;
+
+        public const int CheckDigitBase = 37;
+
+        private static readonly IDictionary<int, char> valueEncodings;
+
+        private static readonly IDictionary<int, char> checkDigitEncodings;
+
+        private static readonly IDictionary<char, int> valueDecodings;
+
+        private static readonly IDictionary<char, int> checkDigitDecodings;
+
         static CrockfordBase32Encoding()
         {
-            var symbols = new SymbolDefinitions();
-            valueEncodings = symbols.ValueEncodings;
-            checkDigitEncodings = symbols.CheckDigitEncodings;
-            valueDecodings = symbols.ValueDecodings;
-            checkDigitDecodings = symbols.CheckDigitDecodings;
+            SymbolDefinitions symbolDefinitions = new SymbolDefinitions();
+            valueEncodings = symbolDefinitions.ValueEncodings;
+            checkDigitEncodings = symbolDefinitions.CheckDigitEncodings;
+            valueDecodings = symbolDefinitions.ValueDecodings;
+            checkDigitDecodings = symbolDefinitions.CheckDigitDecodings;
         }
 
-        public string Encode(ulong input, bool includeCheckDigit)
+        public static string Encode(ulong input, bool includeCheckDigit)
         {
-            var chunks = SplitInto5BitChunks(input);
-            var characters = chunks.Select(chunk => valueEncodings[chunk]);
-
+            IEnumerable<char> enumerable = from chunk in SplitInto5BitChunks(input)
+                                           select valueEncodings[chunk];
             if (includeCheckDigit)
             {
-                var checkValue = (int)(input % CheckDigitBase);
-                characters = characters.Concat(new [] { checkDigitEncodings[checkValue] });
+                int key = (int)(input % CheckDigitBase);
+                enumerable = enumerable.Concat(new char[1]
+                {
+                checkDigitEncodings[key]
+                });
             }
 
-            return new string(characters.ToArray());
+            return new string(enumerable.ToArray());
+        }
+
+        public static IEnumerable<ulong> SplitIntoUlongs(IEnumerable<byte> input)
+        {
+            const int chunkLength = sizeof(ulong);
+            int chunks = (int)Math.Ceiling((double)(input.Count()) / chunkLength);
+            var paddedBytes = new byte[chunks * chunkLength];
+            Array.Fill<byte>(paddedBytes, 0);
+            input.ToArray().CopyTo(paddedBytes, 0);
+            var memoryBytes = new Memory<byte>(paddedBytes);
+
+            List<ulong> enumerable = new List<ulong>(chunks);
+            for (int i = 0; i < paddedBytes.Length; i += chunkLength)
+            {
+                var chunk = memoryBytes.Slice(i, chunkLength)
+                        .ToArray();
+                var u = BitConverter.ToUInt64(
+                    value: chunk);
+                enumerable.Add(u);
+            }
+
+            return enumerable;
+        }
+
+        public static IEnumerable<string> SplitEncodedByCheckDigits(string input)
+        {
+            List<string> results = new List<string>();
+            char[] digits = checkDigitDecodings.Keys.ToArray<char>();
+            int lastOffset = 0;
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (digits.Contains(input[i]))
+                {
+                    results.Add(input.Substring(lastOffset, 1 + i - lastOffset));
+                    lastOffset = i + 1;
+                }
+            }
+
+            return results;
+        }
+
+        public static string EncodeMultipleBytesAsSeparateUlongs(IEnumerable<byte> inputBytes, bool includeCheckDigit)
+        {
+            List<char> output = new List<char>();
+            IEnumerable<ulong> inputLongs = SplitIntoUlongs(inputBytes);
+            int i = 0;
+
+            foreach (ulong input in inputLongs)
+            {
+                IEnumerable<char> enumerable = from chunk in SplitInto5BitChunks(input)
+                                               select valueEncodings[chunk];
+
+                output.AddRange(enumerable);
+
+                if (includeCheckDigit)
+                {
+                    int key = (int)(input % CheckDigitBase);
+                    output.Add(checkDigitEncodings[key]);
+                }
+            }
+
+            return new string(output.ToArray());
         }
 
         internal static IEnumerable<byte> SplitInto5BitChunks(ulong input)
         {
-            const int bitsPerChunk = 5;
-            const int shift = (sizeof (ulong) * 8) - bitsPerChunk;
-            var chunks = new List<byte>();
+            List<byte> list = new List<byte>();
             do
             {
-                var lastChunk = input << shift >> shift;
-                chunks.Insert(0, (byte)lastChunk);
-                input = input >> bitsPerChunk;
-            } while (input > 0);
-            return chunks;
+                ulong num = input << 59 >> 59;
+                list.Insert(0, (byte)num);
+                input >>= 5;
+            }
+            while (input != 0);
+            return list;
         }
 
-        public ulong? Decode(string encodedString, bool treatLastCharacterAsCheckDigit)
+        public static IEnumerable<ulong?> DecodeMultipleCheckDigitEncoded(string encodedString)
+        {
+            List<ulong?> result = new List<ulong?>();
+            foreach (var group in SplitEncodedByCheckDigits(encodedString))
+            {
+                result.Add(Decode(group, true));
+            }
+
+            return result;
+        }
+
+        public static ulong? Decode(string encodedString, bool treatLastCharacterAsCheckDigit)
         {
             if (encodedString == null)
+            {
                 throw new ArgumentNullException("encodedString");
+            }
 
             if (encodedString.Length == 0)
+            {
                 return null;
+            }
 
-            IEnumerable<char> charactersInReverse = encodedString.Reverse().ToArray();
-
-            int? expectedCheckValue = null;
+            IEnumerable<char> enumerable = encodedString.Reverse().ToArray();
+            int? num = null;
             if (treatLastCharacterAsCheckDigit)
             {
-                var checkDigit = charactersInReverse.First();
-                if (!checkDigitDecodings.ContainsKey(checkDigit)) return null;
-                expectedCheckValue = checkDigitDecodings[checkDigit];
+                char key = enumerable.First();
+                if (!checkDigitDecodings.ContainsKey(key))
+                {
+                    return null;
+                }
 
-                charactersInReverse = charactersInReverse.Skip(1);
+                num = checkDigitDecodings[key];
+                enumerable = enumerable.Skip(1);
             }
 
-            ulong number = 0;
-            ulong currentBase = 1;
-            foreach (var character in charactersInReverse)
+            ulong num2 = 0uL;
+            ulong num3 = 1uL;
+            foreach (char item in enumerable)
             {
-                if (!valueDecodings.ContainsKey(character)) return null;
+                if (!valueDecodings.ContainsKey(item))
+                {
+                    return null;
+                }
 
-                var value = valueDecodings[character];
-                number += (ulong)value * currentBase;
-
-                currentBase *= Base;
+                int num4 = valueDecodings[item];
+                num2 += (ulong)((long)num4 * (long)num3);
+                num3 *= Base;
             }
 
-            if (expectedCheckValue.HasValue &&
-                (int)(number % CheckDigitBase) != expectedCheckValue)
+            if (num.HasValue && (int?)(num2 % CheckDigitBase) != num)
+            {
                 return null;
+            }
 
-            return number;
+            return num2;
         }
     }
 }

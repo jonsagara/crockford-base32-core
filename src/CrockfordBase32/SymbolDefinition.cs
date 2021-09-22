@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace CrockfordBase32
+﻿namespace CrockfordBase32
 {
+    using System.Collections.Generic;
+
     internal class SymbolDefinition
     {
         public int Value { get; set; }

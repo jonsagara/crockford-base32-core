@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace CrockfordBase32
+﻿namespace CrockfordBase32
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
     internal class SymbolDefinitions : List<SymbolDefinition>
     {
         readonly List<SymbolDefinition> extraCheckDigits = new List<SymbolDefinition>();
